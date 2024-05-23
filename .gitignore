@@ -1,0 +1,9 @@
+node_modules
+/dist
+.idea/dataSources/*
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.DS_Store
+/test-results/
+/playwright-report/
+/playwright/.cache/

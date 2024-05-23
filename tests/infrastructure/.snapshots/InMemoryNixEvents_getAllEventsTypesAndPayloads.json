@@ -1,0 +1,14 @@
+[
+  {
+    "type": "an_event_type",
+    "payload": {
+      "key": "value"
+    }
+  },
+  {
+    "type": "another_event_type",
+    "payload": {
+      "key": "value_2"
+    }
+  }
+]

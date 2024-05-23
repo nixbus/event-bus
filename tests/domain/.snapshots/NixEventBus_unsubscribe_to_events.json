@@ -1,0 +1,17 @@
+{
+  "subscribers": {
+    "an_event_type": [],
+    "another_event_type": [
+      {
+        "id": "another_subscriber_id",
+        "config": {
+          "maxRetries": 3,
+          "timeout": 10,
+          "concurrency": 5
+        }
+      }
+    ]
+  },
+  "events": {},
+  "retries": {}
+}

@@ -1,0 +1,42 @@
+{
+  "events": {
+    "subscribers": {},
+    "events": {},
+    "retries": {}
+  },
+  "actions": {
+    "a_subscriber_id": [
+      {
+        "id": "an_event_id",
+        "type": "an_event_type",
+        "payload": {
+          "hello": "world"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      }
+    ],
+    "another_subscriber_id": [
+      {
+        "id": "an_event_id",
+        "type": "an_event_type",
+        "payload": {
+          "hello": "world"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      }
+    ],
+    "any_other_subscriber_id": [
+      {
+        "id": "another_event_id",
+        "type": "another_event_type",
+        "payload": {
+          "hello": "world 2"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      }
+    ]
+  }
+}

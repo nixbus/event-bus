@@ -1,0 +1,56 @@
+{
+  "subscribers": {
+    "an_event_type": [
+      {
+        "id": "a_subscriber_id",
+        "config": {
+          "maxRetries": 3,
+          "timeout": 10,
+          "concurrency": 5
+        }
+      }
+    ],
+    "another_event_type": [
+      {
+        "id": "another_subscriber_id",
+        "config": {
+          "maxRetries": 3,
+          "timeout": 10,
+          "concurrency": 5
+        }
+      }
+    ]
+  },
+  "events": {
+    "a_subscriber_id": [
+      {
+        "id": "an_event_id",
+        "type": "an_event_type",
+        "payload": {
+          "hello": "world"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      }
+    ],
+    "another_subscriber_id": [
+      {
+        "id": "another_event_id",
+        "type": "another_event_type",
+        "payload": {
+          "hello": "world 2"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      }
+    ]
+  },
+  "retries": {
+    "a_subscriber_id": {
+      "an_event_id": 0
+    },
+    "another_subscriber_id": {
+      "another_event_id": 0
+    }
+  }
+}
