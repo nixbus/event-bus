@@ -9,7 +9,6 @@ async function main() {
     keepNames: true,
     minify: true,
     platform: 'neutral',
-    mainFields: ['module', 'main'],
     tsconfig: './tsconfig.json',
     logLevel: 'info',
     define:
@@ -29,6 +28,7 @@ async function main() {
       ...options,
       outdir: './dist/cjs',
       format: 'cjs',
+      outExtension: { '.js': '.cjs' }
     }),
   ])
 }
