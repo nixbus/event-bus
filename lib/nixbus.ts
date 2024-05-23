@@ -19,34 +19,34 @@ export { InMemoryNixEvents } from 'src/infrastructure/InMemoryNixEvents'
 export { NixBusHttpClient } from 'src/infrastructure/NixBusHttpClient'
 export { EventIdIsRequired } from 'src/domain/errors'
 
-let inMemoryNixBus: NixEventBus | null = null
+let _inMemoryNixBus: NixEventBus | null = null
 export async function getInMemoryNixBus(): Promise<NixEventBus> {
-  if (inMemoryNixBus) {
-    return inMemoryNixBus
+  if (_inMemoryNixBus) {
+    return _inMemoryNixBus
   }
 
   const events = new InMemoryNixEvents()
-  inMemoryNixBus = new NixEventBus({ events })
+  _inMemoryNixBus = new NixEventBus({ events })
 
-  return inMemoryNixBus
+  return _inMemoryNixBus
 }
 
-let httpNixBus: NixEventBus | null = null
+let _httpNixBus: NixEventBus | null = null
 export async function getHttpNixBus(options: {
   passphrase: string
   token: string
   clientEncryption?: boolean
 }): Promise<NixEventBus> {
-  if (httpNixBus) {
-    return httpNixBus
+  if (_httpNixBus) {
+    return _httpNixBus
   }
 
   const encrypted = options.clientEncryption ?? true
   if (!encrypted) {
     const client = new NixBusHttpClient({ crypto: null }, { token: options.token })
     const events = new HttpNixEvents({ client })
-    httpNixBus = new NixEventBus({ events })
-    return httpNixBus
+    _httpNixBus = new NixEventBus({ events })
+    return _httpNixBus
   }
 
   const defaultPassphraseVersion = 'v1'
@@ -56,7 +56,7 @@ export async function getHttpNixBus(options: {
   })
   const client = new NixBusHttpClient({ crypto: nixBusCrypto }, { token: options.token })
   const events = new HttpNixEvents({ client })
-  httpNixBus = new NixEventBus({ events })
+  _httpNixBus = new NixEventBus({ events })
 
-  return httpNixBus
+  return _httpNixBus
 }
