@@ -58,7 +58,10 @@ export function getHttpNixBus(options: {
     defaultPassphraseVersion,
     passphrases: [{ version: defaultPassphraseVersion, phrase: options.passphrase }],
   })
-  const client = new NixBusHttpClient({ crypto: nixBusCrypto }, { token: options.token })
+  const client = new NixBusHttpClient(
+    { crypto: nixBusCrypto },
+    { token: options.token, baseUrl: options.baseUrl },
+  )
   const events = new HttpNixEvents({ client })
   _httpNixBus = new NixEventBus({ events })
 
