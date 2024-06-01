@@ -93,6 +93,7 @@ type Deps = {
 }
 export type NixBusHttpClientOptions = {
   token: string
+  baseUrl?: string
 }
 export class NixBusHttpClient {
   private readonly baseUrl: string
@@ -106,7 +107,7 @@ export class NixBusHttpClient {
       throw new Error('[NixBusHttpClient] token is required')
     }
 
-    this.baseUrl = 'http://localhost:3000/api/v1'
+    this.baseUrl = opts.baseUrl || 'https://nixbus.com/api/v1'
     this.findNextEventsTimeout = {}
   }
 

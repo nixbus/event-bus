@@ -36,6 +36,7 @@ export function getHttpNixBus(options: {
   passphrase: string
   token: string
   clientEncryption?: boolean
+  baseUrl?: string
 }): NixEventBus {
   if (_httpNixBus) {
     return _httpNixBus
@@ -43,7 +44,10 @@ export function getHttpNixBus(options: {
 
   const encrypted = options.clientEncryption ?? true
   if (!encrypted) {
-    const client = new NixBusHttpClient({ crypto: null }, { token: options.token })
+    const client = new NixBusHttpClient(
+      { crypto: null },
+      { token: options.token, baseUrl: options.baseUrl },
+    )
     const events = new HttpNixEvents({ client })
     _httpNixBus = new NixEventBus({ events })
     return _httpNixBus
