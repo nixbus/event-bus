@@ -52,7 +52,7 @@ export class NixEventBus {
         }),
       )
     } catch (error: any) {
-      console.error(`[EventBus] runScheduler ERROR:`, error)
+      console.error(`[EventBus] runScheduler error:`, error)
     }
   }
 
@@ -62,12 +62,12 @@ export class NixEventBus {
 
       Promise.all(
         events.map((event) => {
-          console.log(`[EventBus] Running: ${subscriber.id} ${event.id}...`)
+          console.log(`[EventBus] runSubscriber: ${subscriber.id} ${event.id}...`)
           return this.runSubscriberAction(event, subscriber)
         }),
       )
     } catch (error: any) {
-      console.error(`[EventBus] runSubscriber ERROR:`, error)
+      console.error(`[EventBus] runSubscriber error:`, error)
     }
   }
 
@@ -79,13 +79,20 @@ export class NixEventBus {
         event,
         subscriber,
       })
-      console.log(`[EventBus] Event ${subscriber.id} ${event.id} processed.`)
+      console.log(
+        `[EventBus] runSubscriberAction processed.`,
+        JSON.stringify({ eventId: event.id, subscriberId: subscriber.id }),
+      )
     } catch (error: any) {
       await this.deps.events.markAsFailed({
         event,
         subscriber,
       })
-      console.error(`[EventBus] Event ${subscriber.id} ${event.id} failed with error:`, error)
+      console.error(
+        `[EventBus] runSubscriberAction failed.`,
+        JSON.stringify({ eventId: event.id, subscriberId: subscriber.id }),
+        error,
+      )
     }
   }
 }

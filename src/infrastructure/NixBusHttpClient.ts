@@ -212,14 +212,10 @@ export class NixBusHttpClient {
       event_type: eventType,
       payload: d,
     }
-    const response = await customFetch(`${this.baseUrl}/publish_event`, {
+    await customFetch(`${this.baseUrl}/publish_event`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
-    const data = await response.json()
-    if (!response.ok) {
-      console.error('[NixBusHttpClient] publishEvent error:', data)
-    }
   }
 
   public async putSubscriber({
@@ -302,25 +298,38 @@ export class NixBusHttpClient {
 }
 
 async function customFetch(url: string, options: RequestInit) {
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  if (!response.ok) {
-    let data
-    try {
-      data = await response.json()
-      throw new Error(JSON.stringify(data))
-    } catch (error) {
-      if (data) {
-        throw error
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!response.ok) {
+      let data
+      try {
+        data = await response.json()
+        throw new Error(JSON.stringify(data))
+      } catch (error) {
+        if (data) {
+          throw error
+        }
+        throw new Error(
+          `[NixBusHttpClient] customFetch error: ${response.status} - ${response.statusText}`,
+        )
       }
-      throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`)
     }
+    return response
+  } catch (error: any) {
+    if (error.message && error.message.includes('socket hang up')) {
+      console.error(`[NixBusHttpClient] customFetch retrying fetch in 1s`, url)
+      await wait(1000)
+      return customFetch(url, options)
+    }
+
+    console.error(`[NixBusHttpClient] customFetch error to fetch`, url, error)
+    throw error
   }
-  return response
 }
 
 async function wait(ms: number) {

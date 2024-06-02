@@ -29,7 +29,7 @@ async function runAsyncInterval(fn: () => Promise<void>, ms: number, id: number)
       interval.id = setTimeout(() => runAsyncInterval(fn, ms, id), ms)
     }
   } catch (error) {
-    console.error('[async-interval]:', error)
+    console.error('[async-interval] error:', error)
     delete asyncIntervals[id]
   }
 }
