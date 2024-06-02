@@ -1,6 +1,7 @@
 import type { NixBusCrypto } from '@nixbus/crypto'
 
 import type { NixSubscriberId } from 'src/domain/NixSubscriber'
+import { fetchJson } from 'src/shared/fetch'
 
 export type EventsResponse = {
   events: EventResponse[]
@@ -124,7 +125,7 @@ export class NixBusHttpClient {
       token: this.opts.token,
       subscriber_id: subscriberId,
     }
-    const response = await customFetch(`${this.baseUrl}/find_next_events`, {
+    const response = await fetchJson(`${this.baseUrl}/find_next_events`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -152,7 +153,7 @@ export class NixBusHttpClient {
     const body: GetSubscribersRequest = {
       token: this.opts.token,
     }
-    const response = await customFetch(`${this.baseUrl}/get_subscribers`, {
+    const response = await fetchJson(`${this.baseUrl}/get_subscribers`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -172,7 +173,7 @@ export class NixBusHttpClient {
       subscriber_id: subscriberId,
       event_id: eventId,
     }
-    await customFetch(`${this.baseUrl}/mark_event_as_failed`, {
+    await fetchJson(`${this.baseUrl}/mark_event_as_failed`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -190,7 +191,7 @@ export class NixBusHttpClient {
       subscriber_id: subscriberId,
       event_id: eventId,
     }
-    await customFetch(`${this.baseUrl}/mark_event_as_finished`, {
+    await fetchJson(`${this.baseUrl}/mark_event_as_finished`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -212,7 +213,7 @@ export class NixBusHttpClient {
       event_type: eventType,
       payload: d,
     }
-    await customFetch(`${this.baseUrl}/publish_event`, {
+    await fetchJson(`${this.baseUrl}/publish_event`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -237,7 +238,7 @@ export class NixBusHttpClient {
         concurrency: config.concurrency,
       },
     }
-    await customFetch(`${this.baseUrl}/put_subscriber`, {
+    await fetchJson(`${this.baseUrl}/put_subscriber`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -248,7 +249,7 @@ export class NixBusHttpClient {
       token: this.opts.token,
     }
 
-    await customFetch(`${this.baseUrl}/remove_all_subscribers`, {
+    await fetchJson(`${this.baseUrl}/remove_all_subscribers`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -266,7 +267,7 @@ export class NixBusHttpClient {
       event_type: eventType,
       subscriber_id: subscriberId,
     }
-    await customFetch(`${this.baseUrl}/remove_subscriber`, {
+    await fetchJson(`${this.baseUrl}/remove_subscriber`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -294,41 +295,6 @@ export class NixBusHttpClient {
       await this.markEventAsFailed({ subscriberId, eventId: i.id })
       return null
     }
-  }
-}
-
-async function customFetch(url: string, options: RequestInit) {
-  try {
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    if (!response.ok) {
-      let data
-      try {
-        data = await response.json()
-        throw new Error(JSON.stringify(data))
-      } catch (error) {
-        if (data) {
-          throw error
-        }
-        throw new Error(
-          `[NixBusHttpClient] customFetch error: ${response.status} - ${response.statusText}`,
-        )
-      }
-    }
-    return response
-  } catch (error: any) {
-    if (error.message && error.message.includes('socket hang up')) {
-      console.error(`[NixBusHttpClient] customFetch retrying fetch in 1s`, url)
-      await wait(1000)
-      return customFetch(url, options)
-    }
-
-    console.error(`[NixBusHttpClient] customFetch error to fetch`, url, error)
-    throw error
   }
 }
 
