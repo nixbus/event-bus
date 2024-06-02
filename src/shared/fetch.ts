@@ -7,7 +7,8 @@ export async function fetchJson(url: string, options: FetchOptions): Promise<Res
     const response = await fetchWithJsonHeaders(url, options)
 
     if (!response.ok) {
-      throw new Error(`Error: ${url} - ${response.status} - ${response.statusText}`)
+      const message = await parseNotOkResponse(response)
+      throw new Error(`${url} - ${response.status} - ${message}`)
     }
 
     return response
@@ -24,6 +25,15 @@ async function fetchWithJsonHeaders(url: string, options: RequestInit): Promise<
       'Content-Type': 'application/json',
     },
   })
+}
+
+async function parseNotOkResponse(response: Response): Promise<string> {
+  try {
+    const json = await response.json()
+    return JSON.stringify(json)
+  } catch (error) {
+    return response.statusText
+  }
 }
 
 async function handleFetchError(url: string, options: FetchOptions, error: any): Promise<Response> {
