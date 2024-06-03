@@ -50,22 +50,19 @@ export type GetSubscribersRequest = {
   token: string
 }
 
-export type MarkEventAsFailedRequest = {
+export type MarkEventsAsFailedRequest = {
   token: string
-  subscriber_id: string
-  event_id: string
+  events: { id: string; subscriber_id: string }[]
 }
 
-export type MarkEventAsFinishedRequest = {
+export type MarkEventsAsFinishedRequest = {
   token: string
-  subscriber_id: string
-  event_id: string
+  events: { id: string; subscriber_id: string }[]
 }
 
-export type PublishEventRequest = {
+export type PublishEventsRequest = {
   token: string
-  event_type: string
-  payload: string
+  events: { type: string; payload: string }[]
 }
 
 export type PutSubscriberRequest = {
@@ -161,59 +158,58 @@ export class NixBusHttpClient {
     return data as SubscribersResponse
   }
 
-  public async markEventAsFailed({
-    subscriberId,
-    eventId,
+  public async markEventsAsFailed({
+    events,
   }: {
-    subscriberId: string
-    eventId: string
+    events: { id: string; subscriberId: string }[]
   }): Promise<void> {
-    const body: MarkEventAsFailedRequest = {
+    const body: MarkEventsAsFailedRequest = {
       token: this.opts.token,
-      subscriber_id: subscriberId,
-      event_id: eventId,
+      events: events.map((e) => ({ id: e.id, subscriber_id: e.subscriberId })),
     }
-    await fetchJson(`${this.baseUrl}/mark_event_as_failed`, {
+    await fetchJson(`${this.baseUrl}/mark_events_as_failed`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
   }
 
-  public async markEventAsFinished({
-    subscriberId,
-    eventId,
+  public async markEventsAsFinished({
+    events,
   }: {
-    subscriberId: string
-    eventId: string
+    events: { id: string; subscriberId: string }[]
   }): Promise<void> {
-    const body: MarkEventAsFinishedRequest = {
+    const body: MarkEventsAsFinishedRequest = {
       token: this.opts.token,
-      subscriber_id: subscriberId,
-      event_id: eventId,
+      events: events.map((e) => ({ id: e.id, subscriber_id: e.subscriberId })),
     }
-    await fetchJson(`${this.baseUrl}/mark_event_as_finished`, {
+    await fetchJson(`${this.baseUrl}/mark_events_as_finished`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
   }
 
-  public async publishEvent({
-    eventType,
-    payload,
+  public async publishEvents({
+    events,
   }: {
-    eventType: string
-    payload: Record<string, any>
+    events: Array<{ type: string; payload: Record<string, any> }>
   }): Promise<void> {
-    const stringPayload = JSON.stringify(payload)
-    const d = this.deps.crypto
-      ? await this.deps.crypto.encrypt(JSON.stringify(payload))
-      : stringPayload
-    const body: PublishEventRequest = {
+    const serializedEvents = await Promise.all(
+      events.map(async (e) => {
+        const payload = this.deps.crypto
+          ? await this.deps.crypto.encrypt(JSON.stringify(e.payload))
+          : JSON.stringify(e.payload)
+        return {
+          type: e.type,
+          payload,
+        }
+      }),
+    )
+
+    const body: PublishEventsRequest = {
       token: this.opts.token,
-      event_type: eventType,
-      payload: d,
+      events: serializedEvents,
     }
-    await fetchJson(`${this.baseUrl}/publish_event`, {
+    await fetchJson(`${this.baseUrl}/publish_events`, {
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -292,7 +288,14 @@ export class NixBusHttpClient {
         i.payload,
         error,
       )
-      await this.markEventAsFailed({ subscriberId, eventId: i.id })
+      await this.markEventsAsFailed({
+        events: [
+          {
+            id: i.id,
+            subscriberId,
+          },
+        ],
+      })
       return null
     }
   }

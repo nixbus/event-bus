@@ -8,7 +8,15 @@ import type {
 } from 'src/infrastructure/NixBusHttpClient'
 
 export class HttpNixEvents implements NixEvents {
-  constructor(private deps: { client: NixBusHttpClient }) {}
+  private readonly markedAsFinished: Array<{ id: string; subscriberId: string }>
+  private readonly markedAsFailed: Array<{ id: string; subscriberId: string }>
+  private readonly eventsToPublish: Array<{ type: string; payload: Record<string, any> }>
+
+  constructor(private deps: { client: NixBusHttpClient }) {
+    this.markedAsFinished = []
+    this.markedAsFailed = []
+    this.eventsToPublish = []
+  }
 
   public async findNextEventsFor(subscriber: NixSubscriber): Promise<NixEvent[]> {
     const { events } = await this.deps.client.findNextEvents({ subscriberId: subscriber.id })
@@ -50,9 +58,14 @@ export class HttpNixEvents implements NixEvents {
     event: NixEvent
     subscriber: NixSubscriber
   }): Promise<void> {
-    await this.deps.client.markEventAsFailed({
-      subscriberId: subscriber.id,
-      eventId: event.id,
+    this.markedAsFailed.push({ id: event.id, subscriberId: subscriber.id })
+
+    await wait(500)
+    const events = this.markedAsFailed.splice(0, this.markedAsFailed.length)
+    if (events.length === 0) return
+
+    await this.deps.client.markEventsAsFailed({
+      events,
     })
   }
 
@@ -63,16 +76,29 @@ export class HttpNixEvents implements NixEvents {
     event: NixEvent
     subscriber: NixSubscriber
   }): Promise<void> {
-    await this.deps.client.markEventAsFinished({
-      subscriberId: subscriber.id,
-      eventId: event.id,
+    this.markedAsFinished.push({ id: event.id, subscriberId: subscriber.id })
+
+    await wait(500)
+    const events = this.markedAsFinished.splice(0, this.markedAsFinished.length)
+    if (events.length === 0) return
+
+    await this.deps.client.markEventsAsFinished({
+      events,
     })
   }
 
   public async put({ event }: { event: NixNewEvent | NixEvent }): Promise<void> {
-    await this.deps.client.publishEvent({
-      eventType: event.type,
+    this.eventsToPublish.push({
+      type: event.type,
       payload: event.payload,
+    })
+
+    await wait(500)
+    const events = this.eventsToPublish.splice(0, this.eventsToPublish.length)
+    if (events.length === 0) return
+
+    await this.deps.client.publishEvents({
+      events,
     })
   }
 
@@ -96,4 +122,8 @@ export class HttpNixEvents implements NixEvents {
       },
     }
   }
+}
+
+async function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
