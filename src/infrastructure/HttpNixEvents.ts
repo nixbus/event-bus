@@ -1,6 +1,6 @@
 import type { NixEvent, NixNewEvent } from 'src/domain/NixEvent'
 import type { NixEvents } from 'src/domain/NixEvents'
-import type { NixSubscriber } from 'src/domain/NixSubscriber'
+import type { NixSubscriber, NixSubscriberId } from 'src/domain/NixSubscriber'
 import type {
   FindEventResponse,
   NixBusHttpClient,
@@ -8,11 +8,13 @@ import type {
 } from 'src/infrastructure/NixBusHttpClient'
 
 export class HttpNixEvents implements NixEvents {
+  private readonly subscribers: Record<NixSubscriberId, NixSubscriber>
   private readonly markedAsFinished: Array<{ id: string; subscriberId: string }>
   private readonly markedAsFailed: Array<{ id: string; subscriberId: string }>
   private readonly eventsToPublish: Array<{ type: string; payload: Record<string, any> }>
 
   constructor(private deps: { client: NixBusHttpClient }) {
+    this.subscribers = {}
     this.markedAsFinished = []
     this.markedAsFailed = []
     this.eventsToPublish = []
@@ -24,8 +26,7 @@ export class HttpNixEvents implements NixEvents {
   }
 
   public async getSubscribers(): Promise<NixSubscriber[]> {
-    const { subscribers } = await this.deps.client.getSubscribers()
-    return subscribers.map((s) => this.serializeSubscriber(s))
+    return Object.values(this.subscribers)
   }
 
   public async getSubscribersByEventType(): Promise<NixSubscriber[]> {
@@ -38,6 +39,7 @@ export class HttpNixEvents implements NixEvents {
       eventType,
       config: subscriber.config,
     })
+    this.subscribers[subscriber.id] = subscriber
   }
 
   public async unsubscribe(eventType: string, subscriberId: string): Promise<void> {
