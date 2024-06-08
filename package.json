@@ -30,7 +30,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@nixbus/crypto": "0.0.15"
+    "@nixbus/crypto": "0.0.18"
   },
   "devDependencies": {
     "@playwright/test": "1.44.1",
