@@ -63,4 +63,4 @@ Check out the [examples folder](/examples) for more usage examples. These exampl
 
 ## API Documentation
 
-For more detailed information on using the NixBus HTTP API, or if you want to create your own implementation or build SDKs in other languages, please refer to our API documentation.
+For more detailed information on using the [NixBus HTTP API](https://nixbus.com/api), or if you want to create your own implementation or build SDKs in other languages, please refer to [NixBus API documentation](https://nixbus.com/api).
