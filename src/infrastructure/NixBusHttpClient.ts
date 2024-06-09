@@ -102,7 +102,9 @@ export class NixBusHttpClient {
     private opts: NixBusHttpClientOptions,
   ) {
     if (!this.opts.token) {
-      throw new Error('[NixBusHttpClient] token is required')
+      throw new Error(
+        '[NixBusHttpClient] token is required. Get your free token at https://nixbus.com',
+      )
     }
 
     this.baseUrl = opts.baseUrl || 'https://nixbus.com/api/v1'
