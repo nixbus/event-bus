@@ -1,0 +1,17 @@
+{
+  "name": "nodejs-cjs",
+  "version": "1.0.0",
+  "description": "NodeJS CJS",
+  "scripts": {
+    "start": "npm-run-all -l -p bus:*",
+    "bus:subscribe": "node subscribe.js",
+    "bus:run": "node run.js",
+    "bus:publish": "node publish.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@nixbus/event-bus": "0.0.14",
+    "npm-run-all": "4.1.5"
+  }
+}

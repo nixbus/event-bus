@@ -1,0 +1,14 @@
+{
+  "name": "in-memory",
+  "version": "1.0.0",
+  "description": "NodeJS CJS",
+  "type": "module",
+  "scripts": {
+    "start": "node run.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@nixbus/event-bus": "0.0.14"
+  }
+}

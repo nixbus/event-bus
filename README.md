@@ -59,7 +59,7 @@ await nixbus.publish({
 ```
 
 ## Examples
-Check out the examples folder for more usage examples. These examples can help you test and understand how to implement NixBus in your projects.
+Check out the [examples folder](/examples) for more usage examples. These examples can help you test and understand how to implement NixBus in your projects.
 
 ## API Documentation
 
