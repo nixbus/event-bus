@@ -80,10 +80,20 @@ export class InMemoryNixEvents implements NixEvents {
     event: NixEvent
     subscriber: NixSubscriber
   }): Promise<void> {
-    const retries = this.ensureRetryRecord(subscriber.id, event.id)
-    this.retries[subscriber.id][event.id] = retries + 1
+    const retries = this.ensureRetryRecord(subscriber.id, event.id) + 1
+    this.retries[subscriber.id][event.id] = retries
 
-    this.ensureEventList(subscriber.id).push(event)
+    if (retries >= subscriber.config.maxRetries) {
+      delete this.events[subscriber.id]
+      delete this.retries[subscriber.id]
+      return
+    }
+
+    setTimeout(() => {
+      if (this.retries[subscriber.id]?.[event.id] < subscriber.config.maxRetries) {
+        this.ensureEventList(subscriber.id).push(event)
+      }
+    }, subscriber.config.timeout * 1000)
   }
 
   public async markAsFinished({
