@@ -1,0 +1,14 @@
+{
+  "name": "express-blog",
+  "version": "1.0.0",
+  "description": "A simple blog application built with Express.js",
+  "type": "module",
+  "scripts": {
+    "start": "node run.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@nixbus/event-bus": "0.0.14"
+  }
+}
