@@ -103,9 +103,7 @@ export class InMemoryNixEvents implements NixEvents {
     event: NixEvent
     subscriber: NixSubscriber
   }): Promise<void> {
-    if (this.retries[subscriber.id]?.[event.id] >= 0) {
-      delete this.retries[subscriber.id][event.id]
-    }
+    delete this.retries[subscriber.id]?.[event.id]
   }
 
   public async put({ event }: { event: NixNewEvent | NixEvent }): Promise<void> {
