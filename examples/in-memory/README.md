@@ -7,5 +7,5 @@ npm install
 
 2. Run the example:
 ```bash
-NIXBUS_PASSPHRASE=your-passphrase npm start
+npm start
 ```
