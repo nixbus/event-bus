@@ -9,7 +9,7 @@ test.describe('InMemoryNixEvents', () => {
     inMemoryNixEvents = new InMemoryNixEvents()
   })
 
-  test('put if no subscribers', async () => {
+  test('do not put the event if no subscribers', async () => {
     await inMemoryNixEvents.put({
       event: {
         id: 'another_event_id',
@@ -93,7 +93,7 @@ test.describe('InMemoryNixEvents', () => {
     expect(events).verify()
   })
 
-  test('getAllEventsTypesAndPayloads', async () => {
+  test('get all events types and payloads', async () => {
     await inMemoryNixEvents.subscribe('an_event_type', {
       id: 'a_subscriber_id',
       config: { maxRetries: 3, timeout: 10, concurrency: 1 },
@@ -123,7 +123,7 @@ test.describe('InMemoryNixEvents', () => {
     expect(events).verify()
   })
 
-  test('getAllEventsTypesAndPayloads with no duplicates', async () => {
+  test('get all events types and payloads with no duplicates', async () => {
     await inMemoryNixEvents.subscribe('an_event_type', {
       id: 'a_subscriber_id',
       config: { maxRetries: 3, timeout: 10, concurrency: 1 },
