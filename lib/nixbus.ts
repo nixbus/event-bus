@@ -1,4 +1,5 @@
-import { getNixBusCrypto } from '@nixbus/crypto'
+import type { NixBusCrypto } from '@nixbus/crypto'
+import { createNixBusCrypto } from '@nixbus/crypto'
 
 import type { LogLevel } from 'src/infrastructure/Logger'
 import { NixEventBus } from 'src/domain/NixEventBus'
@@ -60,20 +61,16 @@ export function getHttpNixBus(options: HttpNixBusOptions): NixEventBus {
 export function createHttpNixBus(options: HttpNixBusOptions): NixEventBus {
   const logger = new Logger({ level: options.log?.level })
   const encrypted = options.clientEncryption ?? true
-  if (!encrypted) {
-    const client = new NixBusHttpClient(
-      { crypto: null, logger },
-      { token: options.token, baseUrl: options.baseUrl },
-    )
-    const events = new HttpNixEvents({ client })
-    return new NixEventBus({ events, logger })
+
+  let nixBusCrypto: NixBusCrypto | null = null
+  if (encrypted) {
+    const defaultPassphraseVersion = 'v1'
+    nixBusCrypto = createNixBusCrypto({
+      defaultPassphraseVersion,
+      passphrases: [{ version: defaultPassphraseVersion, phrase: options.passphrase }],
+    })
   }
 
-  const defaultPassphraseVersion = 'v1'
-  const nixBusCrypto = getNixBusCrypto({
-    defaultPassphraseVersion,
-    passphrases: [{ version: defaultPassphraseVersion, phrase: options.passphrase }],
-  })
   const client = new NixBusHttpClient(
     { crypto: nixBusCrypto, logger },
     { token: options.token, baseUrl: options.baseUrl },
