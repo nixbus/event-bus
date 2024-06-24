@@ -3,6 +3,7 @@ import { expect, test } from 'playwright/test'
 import type { NixEvents } from 'src/domain/NixEvents'
 import { NixEventBus } from 'src/domain/NixEventBus'
 import { InMemoryNixEvents } from 'src/infrastructure/InMemoryNixEvents'
+import { Logger } from 'src/infrastructure/Logger'
 
 test.describe('NixEventBus', () => {
   let events: NixEvents
@@ -10,7 +11,7 @@ test.describe('NixEventBus', () => {
 
   test.beforeEach(() => {
     events = new InMemoryNixEvents()
-    eventBus = new NixEventBus({ events })
+    eventBus = new NixEventBus({ events, logger: new Logger() })
   })
 
   test('subscribe to events', async () => {

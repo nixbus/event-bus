@@ -1,10 +1,12 @@
 import type { NixEvent, NixNewEvent } from 'src/domain/NixEvent'
 import type { NixEvents } from 'src/domain/NixEvents'
 import type { NixSubscriber, NixSubscriberAction, NixSubscriberId } from 'src/domain/NixSubscriber'
+import type { Logger } from 'src/infrastructure/Logger'
 import { setAsyncInterval } from 'src/shared/interval'
 
 type EventBusDeps = {
   events: NixEvents
+  logger: Logger
 }
 
 export class NixEventBus {
@@ -21,20 +23,28 @@ export class NixEventBus {
     subscriber: NixSubscriber & { action: NixSubscriberAction },
   ) {
     this.subscribersActions[subscriber.id] = subscriber.action
-    await this.deps.events.subscribe(eventType, subscriber).catch(console.error)
+    await this.deps.events
+      .subscribe(eventType, subscriber)
+      .catch((error) => this.deps.logger.error('EventBus', 'subscribe', { error }))
   }
 
   public async unsubscribe(evenType: string, subscriberId: NixSubscriberId) {
-    await this.deps.events.unsubscribe(evenType, subscriberId).catch(console.error)
+    await this.deps.events
+      .unsubscribe(evenType, subscriberId)
+      .catch((error) => this.deps.logger.error('EventBus', 'unsubscribe', { error }))
   }
 
   public async unsubscribeAll() {
     this.subscribersActions = {}
-    await this.deps.events.unsubscribeAll().catch(console.error)
+    await this.deps.events
+      .unsubscribeAll()
+      .catch((error) => this.deps.logger.error('EventBus', 'unsubscribeAll', { error }))
   }
 
   public async publish(event: NixNewEvent) {
-    await this.deps.events.put({ event }).catch(console.error)
+    await this.deps.events
+      .put({ event })
+      .catch((error) => this.deps.logger.error('EventBus', 'publish', { error }))
   }
 
   public async run() {
@@ -52,7 +62,9 @@ export class NixEventBus {
         }),
       )
     } catch (error: any) {
-      console.error(`[EventBus] runScheduler error:`, error)
+      this.deps.logger.error('EventBus', 'runScheduler', {
+        error,
+      })
     }
   }
 
@@ -62,12 +74,20 @@ export class NixEventBus {
 
       Promise.all(
         events.map((event) => {
-          console.log(`[EventBus] runSubscriber: ${subscriber.id} ${event.id}...`)
+          this.deps.logger.info('EventBus', 'runSubscriber', {
+            event_id: event.id,
+            event_type: event.type,
+            subscriber_id: subscriber.id,
+          })
           return this.runSubscriberAction(event, subscriber)
         }),
       )
     } catch (error: any) {
-      console.error(`[EventBus] runSubscriber error:`, error)
+      this.deps.logger.error('EventBus', 'runSubscriber', {
+        method: 'runSubscriber',
+        subscriber_id: subscriber.id,
+        error,
+      })
     }
   }
 
@@ -79,20 +99,21 @@ export class NixEventBus {
         event,
         subscriber,
       })
-      console.log(
-        `[EventBus] runSubscriberAction processed.`,
-        JSON.stringify({ eventId: event.id, subscriberId: subscriber.id }),
-      )
+      this.deps.logger.info('EventBus', 'runSubscriberAction', {
+        event_id: event.id,
+        event_type: event.type,
+        subscriber_id: subscriber.id,
+      })
     } catch (error: any) {
       await this.deps.events.markAsFailed({
         event,
         subscriber,
       })
-      console.error(
-        `[EventBus] runSubscriberAction failed.`,
-        JSON.stringify({ eventId: event.id, subscriberId: subscriber.id }),
+      this.deps.logger.error('EventBus', 'runSubscriberAction', {
+        event_id: event.id,
+        subscriber_id: subscriber.id,
         error,
-      )
+      })
     }
   }
 }

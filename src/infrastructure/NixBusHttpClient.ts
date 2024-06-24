@@ -1,6 +1,7 @@
 import type { NixBusCrypto } from '@nixbus/crypto'
 
 import type { NixSubscriberId } from 'src/domain/NixSubscriber'
+import type { Logger } from 'src/infrastructure/Logger'
 import { fetchJson } from 'src/shared/fetch'
 
 export type EventsResponse = {
@@ -88,6 +89,7 @@ export type RemoveSubscriberRequest = {
 
 type Deps = {
   crypto: NixBusCrypto | null
+  logger: Logger
 }
 export type NixBusHttpClientOptions = {
   token: string
@@ -141,7 +143,7 @@ export class NixBusHttpClient {
       delete this.findNextEventsTimeout[subscriberId]
     }
 
-    const e = await Promise.all(data.events.map((i) => this.serialize(subscriberId, i)))
+    const e = await Promise.all(data.events.map((i) => this.deserialize(subscriberId, i)))
     const events = e.filter((i) => i !== null) as FindEventResponse[]
     return {
       events,
@@ -271,7 +273,7 @@ export class NixBusHttpClient {
     })
   }
 
-  private async serialize(
+  private async deserialize(
     subscriberId: string,
     i: EventResponse,
   ): Promise<FindEventResponse | null> {
@@ -285,11 +287,7 @@ export class NixBusHttpClient {
         updated_at: new Date(i.updated_at),
       }
     } catch (error) {
-      console.log(
-        `[NixBusHttpClient] Decryption failed for event ${i.id}. Marking as failed.`,
-        i.payload,
-        error,
-      )
+      this.deps.logger.error('NixBusHttpClient', 'deserialize', { event_id: i.id, error })
       await this.markEventsAsFailed({
         events: [
           {
