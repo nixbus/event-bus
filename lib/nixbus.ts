@@ -24,24 +24,32 @@ export function getInMemoryNixBus(): NixEventBus {
   if (_inMemoryNixBus) {
     return _inMemoryNixBus
   }
-
-  const events = new InMemoryNixEvents()
-  _inMemoryNixBus = new NixEventBus({ events })
-
+  _inMemoryNixBus = createInMemoryNixBus()
   return _inMemoryNixBus
 }
 
-let _httpNixBus: NixEventBus | null = null
-export function getHttpNixBus(options: {
+export function createInMemoryNixBus(): NixEventBus {
+  const events = new InMemoryNixEvents()
+  return new NixEventBus({ events })
+}
+
+type HttpNixBusOptions = {
   passphrase: string
   token: string
   clientEncryption?: boolean
   baseUrl?: string
-}): NixEventBus {
+}
+
+let _httpNixBus: NixEventBus | null = null
+export function getHttpNixBus(options: HttpNixBusOptions): NixEventBus {
   if (_httpNixBus) {
     return _httpNixBus
   }
+  _httpNixBus = createHttpNixBus(options)
+  return _httpNixBus
+}
 
+export function createHttpNixBus(options: HttpNixBusOptions): NixEventBus {
   const encrypted = options.clientEncryption ?? true
   if (!encrypted) {
     const client = new NixBusHttpClient(
@@ -49,8 +57,7 @@ export function getHttpNixBus(options: {
       { token: options.token, baseUrl: options.baseUrl },
     )
     const events = new HttpNixEvents({ client })
-    _httpNixBus = new NixEventBus({ events })
-    return _httpNixBus
+    return new NixEventBus({ events })
   }
 
   const defaultPassphraseVersion = 'v1'
@@ -63,7 +70,5 @@ export function getHttpNixBus(options: {
     { token: options.token, baseUrl: options.baseUrl },
   )
   const events = new HttpNixEvents({ client })
-  _httpNixBus = new NixEventBus({ events })
-
-  return _httpNixBus
+  return new NixEventBus({ events })
 }
