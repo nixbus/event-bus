@@ -161,5 +161,7 @@
     "node": ">=20.9.0"
   },
   "author": "dreyacosta",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "nixbus/event-bus",
+  "homepage": "https://nixbus.com"
 }
