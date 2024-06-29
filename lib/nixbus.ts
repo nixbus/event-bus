@@ -21,6 +21,7 @@ export { HttpNixEvents } from 'src/infrastructure/HttpNixEvents'
 export { InMemoryNixEvents } from 'src/infrastructure/InMemoryNixEvents'
 export { NixBusHttpClient } from 'src/infrastructure/NixBusHttpClient'
 export { EventIdIsRequired } from 'src/domain/errors'
+export { Logger } from 'src/infrastructure/Logger'
 
 type InMemoryNixBusOptions = {
   log?: LogLevel
