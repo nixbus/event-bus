@@ -62,7 +62,7 @@ export class HttpNixEvents implements NixEvents {
   }): Promise<void> {
     this.markedAsFailed.push({ id: event.id, subscriberId: subscriber.id })
 
-    await wait(500)
+    await wait(1)
     const events = this.markedAsFailed.splice(0, this.markedAsFailed.length)
     if (events.length === 0) return
 
@@ -80,7 +80,7 @@ export class HttpNixEvents implements NixEvents {
   }): Promise<void> {
     this.markedAsFinished.push({ id: event.id, subscriberId: subscriber.id })
 
-    await wait(500)
+    await wait(1)
     const events = this.markedAsFinished.splice(0, this.markedAsFinished.length)
     if (events.length === 0) return
 
@@ -95,7 +95,7 @@ export class HttpNixEvents implements NixEvents {
       payload: event.payload,
     })
 
-    await wait(500)
+    await wait(1)
     const events = this.eventsToPublish.splice(0, this.eventsToPublish.length)
     if (events.length === 0) return
 
