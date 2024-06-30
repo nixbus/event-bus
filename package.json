@@ -1,6 +1,6 @@
 {
   "name": "@nixbus/event-bus",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "NixBus Event Bus",
   "module": "dist/nixbus.js",
   "main": "dist/cjs/nixbus.cjs",
