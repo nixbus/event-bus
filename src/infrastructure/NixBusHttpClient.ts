@@ -43,31 +43,22 @@ export type SubscriberResponse = {
 }
 
 export type FindNextEventsRequest = {
-  token: string
   subscriber_id: string
 }
 
-export type GetSubscribersRequest = {
-  token: string
-}
-
 export type MarkEventsAsFailedRequest = {
-  token: string
   events: { id: string; subscriber_id: string }[]
 }
 
 export type MarkEventsAsFinishedRequest = {
-  token: string
   events: { id: string; subscriber_id: string }[]
 }
 
 export type PublishEventsRequest = {
-  token: string
   events: { type: string; payload: string }[]
 }
 
 export type PutSubscriberRequest = {
-  token: string
   subscriber_id: string
   event_type: string
   config: {
@@ -77,12 +68,7 @@ export type PutSubscriberRequest = {
   }
 }
 
-export type RemoveAllSubscribersRequest = {
-  token: string
-}
-
 export type RemoveSubscriberRequest = {
-  token: string
   event_type: string
   subscriber_id: string
 }
@@ -123,7 +109,6 @@ export class NixBusHttpClient {
     }
 
     const body: FindNextEventsRequest = {
-      token: this.opts.token,
       subscriber_id: subscriberId,
     }
     const response = await fetchJson(`${this.baseUrl}/find_next_events`, {
@@ -152,12 +137,8 @@ export class NixBusHttpClient {
   }
 
   public async getSubscribers(): Promise<SubscribersResponse> {
-    const body: GetSubscribersRequest = {
-      token: this.opts.token,
-    }
     const response = await fetchJson(`${this.baseUrl}/get_subscribers`, {
       method: 'POST',
-      body: JSON.stringify(body),
       headers: authorizationBearer(this.opts.token),
     })
     const data = await response.json()
@@ -170,7 +151,6 @@ export class NixBusHttpClient {
     events: { id: string; subscriberId: string }[]
   }): Promise<void> {
     const body: MarkEventsAsFailedRequest = {
-      token: this.opts.token,
       events: events.map((e) => ({ id: e.id, subscriber_id: e.subscriberId })),
     }
     await fetchJson(`${this.baseUrl}/mark_events_as_failed`, {
@@ -186,7 +166,6 @@ export class NixBusHttpClient {
     events: { id: string; subscriberId: string }[]
   }): Promise<void> {
     const body: MarkEventsAsFinishedRequest = {
-      token: this.opts.token,
       events: events.map((e) => ({ id: e.id, subscriber_id: e.subscriberId })),
     }
     await fetchJson(`${this.baseUrl}/mark_events_as_finished`, {
@@ -214,7 +193,6 @@ export class NixBusHttpClient {
     )
 
     const body: PublishEventsRequest = {
-      token: this.opts.token,
       events: serializedEvents,
     }
     await fetchJson(`${this.baseUrl}/publish_events`, {
@@ -234,7 +212,6 @@ export class NixBusHttpClient {
     config: { maxRetries: number; concurrency: number; timeout: number }
   }): Promise<void> {
     const body: PutSubscriberRequest = {
-      token: this.opts.token,
       subscriber_id: subscriberId,
       event_type: eventType,
       config: {
@@ -251,13 +228,8 @@ export class NixBusHttpClient {
   }
 
   public async removeAllSubscribers(): Promise<void> {
-    const body: RemoveAllSubscribersRequest = {
-      token: this.opts.token,
-    }
-
     await fetchJson(`${this.baseUrl}/remove_all_subscribers`, {
       method: 'POST',
-      body: JSON.stringify(body),
       headers: authorizationBearer(this.opts.token),
     })
   }
@@ -270,7 +242,6 @@ export class NixBusHttpClient {
     subscriberId: string
   }): Promise<void> {
     const body: RemoveSubscriberRequest = {
-      token: this.opts.token,
       event_type: eventType,
       subscriber_id: subscriberId,
     }
