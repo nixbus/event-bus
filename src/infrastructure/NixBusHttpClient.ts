@@ -2,7 +2,7 @@ import type { NixBusCrypto } from '@nixbus/crypto'
 
 import type { NixSubscriberId } from 'src/domain/NixSubscriber'
 import type { Logger } from 'src/infrastructure/Logger'
-import { fetchJson } from 'src/shared/fetch'
+import { authorizationBearer, fetchJson } from 'src/shared/fetch'
 
 export type EventsResponse = {
   events: EventResponse[]
@@ -129,6 +129,7 @@ export class NixBusHttpClient {
     const response = await fetchJson(`${this.baseUrl}/find_next_events`, {
       method: 'POST',
       body: JSON.stringify(body),
+      headers: authorizationBearer(this.opts.token),
     })
     const json = await response.json()
     const data = json as EventsResponse
@@ -157,6 +158,7 @@ export class NixBusHttpClient {
     const response = await fetchJson(`${this.baseUrl}/get_subscribers`, {
       method: 'POST',
       body: JSON.stringify(body),
+      headers: authorizationBearer(this.opts.token),
     })
     const data = await response.json()
     return data as SubscribersResponse
@@ -174,6 +176,7 @@ export class NixBusHttpClient {
     await fetchJson(`${this.baseUrl}/mark_events_as_failed`, {
       method: 'POST',
       body: JSON.stringify(body),
+      headers: authorizationBearer(this.opts.token),
     })
   }
 
@@ -189,6 +192,7 @@ export class NixBusHttpClient {
     await fetchJson(`${this.baseUrl}/mark_events_as_finished`, {
       method: 'POST',
       body: JSON.stringify(body),
+      headers: authorizationBearer(this.opts.token),
     })
   }
 
@@ -216,6 +220,7 @@ export class NixBusHttpClient {
     await fetchJson(`${this.baseUrl}/publish_events`, {
       method: 'POST',
       body: JSON.stringify(body),
+      headers: authorizationBearer(this.opts.token),
     })
   }
 
@@ -241,6 +246,7 @@ export class NixBusHttpClient {
     await fetchJson(`${this.baseUrl}/put_subscriber`, {
       method: 'POST',
       body: JSON.stringify(body),
+      headers: authorizationBearer(this.opts.token),
     })
   }
 
@@ -252,6 +258,7 @@ export class NixBusHttpClient {
     await fetchJson(`${this.baseUrl}/remove_all_subscribers`, {
       method: 'POST',
       body: JSON.stringify(body),
+      headers: authorizationBearer(this.opts.token),
     })
   }
 
@@ -270,6 +277,7 @@ export class NixBusHttpClient {
     await fetchJson(`${this.baseUrl}/remove_subscriber`, {
       method: 'POST',
       body: JSON.stringify(body),
+      headers: authorizationBearer(this.opts.token),
     })
   }
 

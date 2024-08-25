@@ -2,6 +2,12 @@ type FetchOptions = RequestInit & {
   retryCount?: number
 }
 
+export function authorizationBearer(token: string): Record<string, string> {
+  return {
+    Authorization: `Bearer ${token}`,
+  }
+}
+
 export async function fetchJson(url: string, options: FetchOptions): Promise<Response> {
   try {
     const response = await fetchWithJsonHeaders(url, options)
