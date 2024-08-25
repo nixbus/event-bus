@@ -41,51 +41,7 @@ jobs:
               "pr_template": "- #{{TITLE}} #{{MERGE_SHA}}",
               "categories": [
                 {
-                    "title": "## 🚀 Features",
-                    "labels": ["feat", "feature"]
-                },
-                {
-                    "title": "## 🐛 Fixes",
-                    "labels": ["fix", "bug"]
-                },
-                {
-                    "title": "## 🛠️ Refactor",
-                    "labels": ["refactor"]
-                },
-                {
-                    "title": "## 📚 Documentation",
-                    "labels": ["docs"]
-                },
-                {
-                    "title": "## 🧪 Tests",
-                    "labels": ["test"]
-                },
-                {
-                    "title": "## 🚨 Code Quality",
-                    "labels": ["style"]
-                },
-                {
-                    "title": "## 🚧 Chore",
-                    "labels": ["chore"]
-                },
-                {
-                    "title": "## 🚀 Performance",
-                    "labels": ["perf"]
-                },
-                {
-                    "title": "## 🚀 Build",
-                    "labels": ["build"]
-                },
-                {
-                    "title": "## 🚀 CI",
-                    "labels": ["ci"]
-                },
-                {
-                    "title": "## 🚀 Revert",
-                    "labels": ["revert"]
-                },
-                {
-                    "title": "## 💬 Other",
+                    "title": "## What's Changed",
                     "labels": []
                 }
               ],
