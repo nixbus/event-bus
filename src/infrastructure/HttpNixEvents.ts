@@ -12,12 +12,18 @@ export class HttpNixEvents implements NixEvents {
   private readonly markedAsFinished: Array<{ id: string; subscriberId: string }>
   private readonly markedAsFailed: Array<{ id: string; subscriberId: string }>
   private readonly eventsToPublish: Array<{ type: string; payload: Record<string, any> }>
+  private isPublishingEvents: boolean
+  private isMarkingEventsAsFailed: boolean
+  private isMarkingEventsAsFinished: boolean
 
   constructor(private deps: { client: NixBusHttpClient }) {
     this.subscribers = {}
     this.markedAsFinished = []
     this.markedAsFailed = []
     this.eventsToPublish = []
+    this.isPublishingEvents = false
+    this.isMarkingEventsAsFailed = false
+    this.isMarkingEventsAsFinished = false
   }
 
   public async findNextEventsFor(subscriber: NixSubscriber): Promise<NixEvent[]> {
@@ -62,13 +68,22 @@ export class HttpNixEvents implements NixEvents {
   }): Promise<void> {
     this.markedAsFailed.push({ id: event.id, subscriberId: subscriber.id })
 
-    await wait(1)
-    const events = this.markedAsFailed.splice(0, this.markedAsFailed.length)
-    if (events.length === 0) return
+    if (this.isMarkingEventsAsFailed) {
+      return
+    }
 
-    await this.deps.client.markEventsAsFailed({
-      events,
-    })
+    this.isMarkingEventsAsFailed = true
+
+    while (this.markedAsFailed.length > 0) {
+      const events = this.markedAsFailed.splice(0, this.markedAsFailed.length)
+      if (events.length === 0) return
+
+      await this.deps.client.markEventsAsFailed({
+        events,
+      })
+    }
+
+    this.isMarkingEventsAsFailed = false
   }
 
   public async markAsFinished({
@@ -80,13 +95,22 @@ export class HttpNixEvents implements NixEvents {
   }): Promise<void> {
     this.markedAsFinished.push({ id: event.id, subscriberId: subscriber.id })
 
-    await wait(1)
-    const events = this.markedAsFinished.splice(0, this.markedAsFinished.length)
-    if (events.length === 0) return
+    if (this.isMarkingEventsAsFinished) {
+      return
+    }
 
-    await this.deps.client.markEventsAsFinished({
-      events,
-    })
+    this.isMarkingEventsAsFinished = true
+
+    while (this.markedAsFinished.length > 0) {
+      const events = this.markedAsFinished.splice(0, this.markedAsFinished.length)
+      if (events.length === 0) return
+
+      await this.deps.client.markEventsAsFinished({
+        events,
+      })
+    }
+
+    this.isMarkingEventsAsFinished = false
   }
 
   public async put({ event }: { event: NixNewEvent | NixEvent }): Promise<void> {
@@ -95,13 +119,20 @@ export class HttpNixEvents implements NixEvents {
       payload: event.payload,
     })
 
-    await wait(1)
-    const events = this.eventsToPublish.splice(0, this.eventsToPublish.length)
-    if (events.length === 0) return
+    if (this.isPublishingEvents) {
+      return
+    }
 
-    await this.deps.client.publishEvents({
-      events,
-    })
+    this.isPublishingEvents = true
+
+    while (this.eventsToPublish.length > 0) {
+      const events = this.eventsToPublish.splice(0, this.eventsToPublish.length)
+      if (events.length === 0) return
+
+      await this.deps.client.publishEvents({ events })
+    }
+
+    this.isPublishingEvents = false
   }
 
   private serializeEvent(i: FindEventResponse): NixEvent {
@@ -124,8 +155,4 @@ export class HttpNixEvents implements NixEvents {
       },
     }
   }
-}
-
-async function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
 }
