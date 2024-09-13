@@ -37,7 +37,7 @@ async function parseNotOkResponse(response: Response): Promise<string> {
   try {
     const json = await response.json()
     return JSON.stringify(json)
-  } catch (error) {
+  } catch (__) {
     return response.statusText
   }
 }

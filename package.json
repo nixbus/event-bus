@@ -33,24 +33,25 @@
     "@nixbus/crypto": "0.0.18"
   },
   "devDependencies": {
-    "@playwright/test": "1.44.1",
-    "@types/eslint": "8.56.10",
-    "@types/node": "20.12.12",
-    "@typescript-eslint/eslint-plugin": "7.10.0",
-    "@typescript-eslint/parser": "7.10.0",
+    "@eslint/js": "9.10.0",
+    "@playwright/test": "1.47.1",
+    "@types/eslint": "9.6.1",
+    "@types/node": "22.5.4",
+    "@typescript-eslint/eslint-plugin": "8.5.0",
+    "@typescript-eslint/parser": "8.5.0",
     "dts-bundle-generator": "9.5.1",
-    "esbuild": "0.21.3",
-    "eslint": "8.57.0",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-import": "2.29.1",
-    "eslint-plugin-no-relative-import-paths": "1.5.4",
-    "eslint-plugin-simple-import-sort": "12.1.0",
-    "eslint-plugin-unused-imports": "3.2.0",
-    "npm-package-json-lint": "7.1.0",
+    "esbuild": "0.23.1",
+    "eslint": "9.10.0",
+    "eslint-plugin-no-relative-import-paths": "1.5.5",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "eslint-plugin-unused-imports": "4.1.4",
+    "globals": "15.9.0",
+    "npm-package-json-lint": "8.0.0",
     "npm-run-all": "4.1.5",
-    "prettier": "3.2.5",
-    "tsx": "4.11.0",
-    "typescript": "5.4.5"
+    "prettier": "3.3.3",
+    "tsx": "4.19.1",
+    "typescript": "5.6.2",
+    "typescript-eslint": "8.5.0"
   },
   "eslintIgnore": [
     "/node_modules",
@@ -63,87 +64,6 @@
     "semi": false,
     "singleQuote": true,
     "printWidth": 100
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "project": true,
-      "sourceType": "module",
-      "ecmaVersion": 2022
-    },
-    "env": {
-      "browser": true,
-      "node": true
-    },
-    "settings": {
-      "import/resolver": {
-        "node": {
-          "paths": [
-            "."
-          ]
-        }
-      }
-    },
-    "parser": "@typescript-eslint/parser",
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:import/errors",
-      "plugin:import/warnings",
-      "plugin:import/typescript",
-      "prettier"
-    ],
-    "plugins": [
-      "@typescript-eslint",
-      "simple-import-sort",
-      "unused-imports",
-      "no-relative-import-paths"
-    ],
-    "rules": {
-      "@typescript-eslint/no-empty-function": "warn",
-      "@typescript-eslint/explicit-module-boundary-types": "off",
-      "@typescript-eslint/no-var-requires": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        {
-          "argsIgnorePattern": "__"
-        }
-      ],
-      "@typescript-eslint/no-explicit-any": "off",
-      "unused-imports/no-unused-imports": "error",
-      "@typescript-eslint/consistent-type-imports": "error",
-      "simple-import-sort/imports": [
-        "error",
-        {
-          "groups": [
-            [
-              "^\\u0000"
-            ],
-            [
-              "^node:.*\\u0000$",
-              "^node:"
-            ],
-            [
-              "^(?!src)@?\\w.*\\u0000$",
-              "^(?!src)@?\\w"
-            ],
-            [
-              "^src.*\\u0000$",
-              "^src"
-            ],
-            [
-              "(?<=\\u0000)$",
-              "^"
-            ],
-            [
-              "^\\..*\\u0000$",
-              "^\\."
-            ]
-          ]
-        }
-      ],
-      "import/no-duplicates": "error",
-      "no-relative-import-paths/no-relative-import-paths": "error"
-    }
   },
   "npmpackagejsonlint": {
     "rules": {
