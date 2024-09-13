@@ -56,6 +56,10 @@ export class NixEventBus {
   private async runScheduler() {
     try {
       const subscribers = await this.deps.events.getSubscribers()
+      this.deps.logger.debug('EventBus', 'runScheduler', {
+        subscribers: subscribers.length,
+        date: new Date().toISOString(),
+      })
       await Promise.all(
         subscribers.map(async (s) => {
           return this.runSubscriber(s)
@@ -72,7 +76,7 @@ export class NixEventBus {
     try {
       const events = await this.deps.events.findNextEventsFor(subscriber)
 
-      Promise.all(
+      await Promise.all(
         events.map((event) => {
           this.deps.logger.info('EventBus', 'runSubscriber', {
             event_id: event.id,
@@ -103,6 +107,7 @@ export class NixEventBus {
         event_id: event.id,
         event_type: event.type,
         subscriber_id: subscriber.id,
+        action: action.name,
       })
     } catch (error: any) {
       await this.deps.events.markAsFailed({
