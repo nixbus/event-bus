@@ -7,7 +7,7 @@ import type {
   SubscriberResponse,
 } from 'src/infrastructure/NixBusHttpClient'
 
-export class HttpNixEvents implements NixEvents {
+export class NixEventsHttp implements NixEvents {
   private readonly subscribers: Record<NixSubscriberId, NixSubscriber>
   private readonly markedAsFinished: Array<{ id: string; subscriberId: string }>
   private readonly markedAsFailed: Array<{ id: string; subscriberId: string }>

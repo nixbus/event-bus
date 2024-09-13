@@ -3,7 +3,7 @@ import type { NixEvents } from 'src/domain/NixEvents'
 import type { NixSubscriber, NixSubscriberId } from 'src/domain/NixSubscriber'
 import { EventIdIsRequired } from 'src/domain/errors'
 
-export class InMemoryNixEvents implements NixEvents {
+export class NixEventsInMemory implements NixEvents {
   private subscribers: Record<NixEventType, NixSubscriber[]>
   private events: Record<NixSubscriberId, NixEvent[]>
   private retries: Record<NixSubscriberId, Record<NixEventId, number>>

@@ -1,12 +1,12 @@
 import { expect, test } from 'playwright/test'
 
-import { InMemoryNixEvents } from 'src/infrastructure/InMemoryNixEvents'
+import { NixEventsInMemory } from 'src/infrastructure/NixEventsInMemory'
 
 test.describe('InMemoryNixEvents', () => {
-  let inMemoryNixEvents: InMemoryNixEvents
+  let inMemoryNixEvents: NixEventsInMemory
 
   test.beforeEach(() => {
-    inMemoryNixEvents = new InMemoryNixEvents()
+    inMemoryNixEvents = new NixEventsInMemory()
   })
 
   test('do not put the event if no subscribers', async () => {

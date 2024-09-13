@@ -2,15 +2,15 @@ import { expect, test } from 'playwright/test'
 
 import type { NixEvents } from 'src/domain/NixEvents'
 import { NixEventBus } from 'src/domain/NixEventBus'
-import { InMemoryNixEvents } from 'src/infrastructure/InMemoryNixEvents'
 import { Logger } from 'src/infrastructure/Logger'
+import { NixEventsInMemory } from 'src/infrastructure/NixEventsInMemory'
 
 test.describe('NixEventBus', () => {
   let events: NixEvents
   let eventBus: NixEventBus
 
   test.beforeEach(() => {
-    events = new InMemoryNixEvents()
+    events = new NixEventsInMemory()
     eventBus = new NixEventBus({ events, logger: new Logger() })
   })
 

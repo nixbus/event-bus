@@ -4,12 +4,12 @@ import { mock } from 'node:test'
 import { expect } from '@playwright/test'
 import { test } from 'playwright/test'
 
-import { HttpNixEvents } from 'src/infrastructure/HttpNixEvents'
 import { Logger } from 'src/infrastructure/Logger'
 import { NixBusHttpClient } from 'src/infrastructure/NixBusHttpClient'
+import { NixEventsHttp } from 'src/infrastructure/NixEventsHttp'
 
 test.describe('InMemoryNixEvents', () => {
-  let httpNixEvents: HttpNixEvents
+  let httpNixEvents: NixEventsHttp
   let nixBusHttpClient: NixBusHttpClient
 
   const event = {
@@ -56,7 +56,7 @@ test.describe('InMemoryNixEvents', () => {
         token: 'a_token',
       },
     )
-    httpNixEvents = new HttpNixEvents({
+    httpNixEvents = new NixEventsHttp({
       client: nixBusHttpClient,
     })
   })

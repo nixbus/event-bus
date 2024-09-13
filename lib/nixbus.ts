@@ -3,10 +3,10 @@ import { createNixBusCrypto } from '@nixbus/crypto'
 
 import type { LogLevel } from 'src/infrastructure/Logger'
 import { NixEventBus } from 'src/domain/NixEventBus'
-import { HttpNixEvents } from 'src/infrastructure/HttpNixEvents'
-import { InMemoryNixEvents } from 'src/infrastructure/InMemoryNixEvents'
 import { Logger } from 'src/infrastructure/Logger'
 import { NixBusHttpClient } from 'src/infrastructure/NixBusHttpClient'
+import { NixEventsHttp } from 'src/infrastructure/NixEventsHttp'
+import { NixEventsInMemory } from 'src/infrastructure/NixEventsInMemory'
 
 export type { NixEvents } from 'src/domain/NixEvents'
 export type { NixSubscriber } from 'src/domain/NixSubscriber'
@@ -17,32 +17,32 @@ export type { NixEvent } from 'src/domain/NixEvent'
 export type { NixNewEvent } from 'src/domain/NixEvent'
 
 export { NixEventBus } from 'src/domain/NixEventBus'
-export { HttpNixEvents } from 'src/infrastructure/HttpNixEvents'
-export { InMemoryNixEvents } from 'src/infrastructure/InMemoryNixEvents'
+export { NixEventsHttp } from 'src/infrastructure/NixEventsHttp'
+export { NixEventsInMemory } from 'src/infrastructure/NixEventsInMemory'
 export { NixBusHttpClient } from 'src/infrastructure/NixBusHttpClient'
 export { EventIdIsRequired } from 'src/domain/errors'
 export { Logger } from 'src/infrastructure/Logger'
 
-type InMemoryNixBusOptions = {
+type NixBusInMemoryOptions = {
   log?: LogLevel
 }
 
-let _inMemoryNixBus: NixEventBus | null = null
-export function getInMemoryNixBus(options: InMemoryNixBusOptions = {}): NixEventBus {
-  if (_inMemoryNixBus) {
-    return _inMemoryNixBus
+let _nixBusInMemory: NixEventBus | null = null
+export function getNixBusInMemory(options: NixBusInMemoryOptions = {}): NixEventBus {
+  if (_nixBusInMemory) {
+    return _nixBusInMemory
   }
-  _inMemoryNixBus = createInMemoryNixBus(options)
-  return _inMemoryNixBus
+  _nixBusInMemory = createNixBusInMemory(options)
+  return _nixBusInMemory
 }
 
-export function createInMemoryNixBus(options: InMemoryNixBusOptions = {}): NixEventBus {
-  const events = new InMemoryNixEvents()
+export function createNixBusInMemory(options: NixBusInMemoryOptions = {}): NixEventBus {
+  const events = new NixEventsInMemory()
   const logger = new Logger({ level: options.log?.level })
   return new NixEventBus({ events, logger })
 }
 
-type HttpNixBusOptions = {
+type NixBusHttpOptions = {
   passphrase: string
   token: string
   clientEncryption?: boolean
@@ -50,16 +50,16 @@ type HttpNixBusOptions = {
   log?: LogLevel
 }
 
-let _httpNixBus: NixEventBus | null = null
-export function getHttpNixBus(options: HttpNixBusOptions): NixEventBus {
-  if (_httpNixBus) {
-    return _httpNixBus
+let _nixBusHttp: NixEventBus | null = null
+export function getNixBusHttp(options: NixBusHttpOptions): NixEventBus {
+  if (_nixBusHttp) {
+    return _nixBusHttp
   }
-  _httpNixBus = createHttpNixBus(options)
-  return _httpNixBus
+  _nixBusHttp = createNixBusHttp(options)
+  return _nixBusHttp
 }
 
-export function createHttpNixBus(options: HttpNixBusOptions): NixEventBus {
+export function createNixBusHttp(options: NixBusHttpOptions): NixEventBus {
   const logger = new Logger({ level: options.log?.level })
   const encrypted = options.clientEncryption ?? true
 
@@ -76,6 +76,6 @@ export function createHttpNixBus(options: HttpNixBusOptions): NixEventBus {
     { crypto: nixBusCrypto, logger },
     { token: options.token, baseUrl: options.baseUrl },
   )
-  const events = new HttpNixEvents({ client })
+  const events = new NixEventsHttp({ client })
   return new NixEventBus({ events, logger })
 }
