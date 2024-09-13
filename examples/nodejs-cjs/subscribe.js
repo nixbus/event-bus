@@ -1,7 +1,7 @@
-const { getHttpNixBus } = require('@nixbus/event-bus')
+const { getNixBusHttp } = require('@nixbus/event-bus')
 
 async function main() {
-  const bus = getHttpNixBus({
+  const bus = getNixBusHttp({
     token: process.env.NIXBUS_TOKEN,
     passphrase: process.env.NIXBUS_PASSPHRASE,
   })

@@ -1,4 +1,4 @@
-import { getInMemoryNixBus } from '@nixbus/event-bus'
+import { getNixBusInMemory } from '@nixbus/event-bus'
 import express from 'express'
 
 const BLOG_POST_VISITED_EVENT = 'post-visited'
@@ -28,7 +28,7 @@ async function runServer() {
       '<p><i>An internal event is published because you are visiting that page.</i></p>',
     ].join('')
 
-    const bus = getInMemoryNixBus()
+    const bus = getNixBusInMemory()
     bus.publish({
       id: `${eventId++}`,
       type: BLOG_POST_VISITED_EVENT,
@@ -46,7 +46,7 @@ async function runServer() {
 }
 
 async function runEventBus() {
-  const bus = getInMemoryNixBus()
+  const bus = getNixBusInMemory()
 
   await bus.subscribe(BLOG_POST_VISITED_EVENT, {
     id: 'post-visited-subscriber',

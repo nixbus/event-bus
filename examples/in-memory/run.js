@@ -1,7 +1,7 @@
-import { getInMemoryNixBus } from '@nixbus/event-bus'
+import { getNixBusInMemory } from '@nixbus/event-bus'
 
 async function main() {
-  const bus = getInMemoryNixBus()
+  const bus = getNixBusInMemory()
 
   await bus.subscribe('an-example-event', {
     id: 'an-example-subscriber',

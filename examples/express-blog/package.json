@@ -9,6 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@nixbus/event-bus": "0.0.15"
+    "@nixbus/event-bus": "0.0.20",
+    "express": "4.21.0"
   }
 }

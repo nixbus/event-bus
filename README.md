@@ -23,9 +23,9 @@ npm install @nixbus/event-bus --save -E
 ### Subscribing to Events and running the event bus
 
 ```javascript
-import { getHttpNixBus } from '@nixbus/event-bus'
+import { getNixBusHttp } from '@nixbus/event-bus'
 
-const nixbus = getHttpNixBus({
+const nixbus = getNixBusHttp({
   token: 'your_token',
   passphrase: 'your_passphrase',
 })
@@ -45,9 +45,9 @@ nixbus.run()
 ### Publishing events
 
 ```javascript
-import { getHttpNixBus } from '@nixbus/event-bus'
+import { getNixBusHttp } from '@nixbus/event-bus'
 
-const nixbus = getHttpNixBus({
+const nixbus = getNixBusHttp({
   token: 'your_token',
   passphrase: 'your_passphrase',
 })

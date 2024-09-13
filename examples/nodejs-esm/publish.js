@@ -1,7 +1,7 @@
-import { getHttpNixBus } from '@nixbus/event-bus'
+import { getNixBusHttp } from '@nixbus/event-bus'
 
 async function main() {
-  const bus = getHttpNixBus({
+  const bus = getNixBusHttp({
     token: process.env.NIXBUS_TOKEN,
     passphrase: process.env.NIXBUS_PASSPHRASE,
   })
