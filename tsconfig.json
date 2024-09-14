@@ -1,5 +1,5 @@
 {
-  "exclude": [],
+  "exclude": ["examples"],
   "include": ["env.d.ts", "scripts/*.js", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
