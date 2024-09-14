@@ -2,6 +2,8 @@
 
 NixBus Event Bus is a secure, robust, and efficient event bus over HTTP. This JavaScript SDK allows you to integrate NixBus into your applications seamlessly, enabling decoupled event-driven architectures. Ideal for microservices, this SDK supports event publishing, subscribing, and processing with ease.
 
+![VhJM18RjcpLdWsHFSNhEVAiB](https://github.com/user-attachments/assets/908f2662-c2e2-4c12-95d3-3f23f257aba8)
+
 ## Features
 
 - **Simple Integration:** Easily add NixBus to your project using NixBus NPM package.
