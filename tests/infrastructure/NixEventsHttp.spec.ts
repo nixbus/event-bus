@@ -8,8 +8,8 @@ import { Logger } from 'src/infrastructure/Logger'
 import { NixBusHttpClient } from 'src/infrastructure/NixBusHttpClient'
 import { NixEventsHttp } from 'src/infrastructure/NixEventsHttp'
 
-test.describe('InMemoryNixEvents', () => {
-  let httpNixEvents: NixEventsHttp
+test.describe('NixEventsHttp', () => {
+  let nixEventsHttp: NixEventsHttp
   let nixBusHttpClient: NixBusHttpClient
 
   const event = {
@@ -56,7 +56,7 @@ test.describe('InMemoryNixEvents', () => {
         token: 'a_token',
       },
     )
-    httpNixEvents = new NixEventsHttp({
+    nixEventsHttp = new NixEventsHttp({
       client: nixBusHttpClient,
     })
   })
@@ -65,16 +65,16 @@ test.describe('InMemoryNixEvents', () => {
     mock.method(nixBusHttpClient, 'publishEvents', async () => wait(100))
 
     await Promise.all([
-      httpNixEvents.put({
+      nixEventsHttp.put({
         event,
       }),
-      httpNixEvents.put({
+      nixEventsHttp.put({
         event: anotherEvent,
       }),
-      httpNixEvents.put({
+      nixEventsHttp.put({
         event: anyOtherEvent,
       }),
-      httpNixEvents.put({
+      nixEventsHttp.put({
         event: oneMoreEvent,
       }),
     ])
@@ -123,19 +123,19 @@ test.describe('InMemoryNixEvents', () => {
     mock.method(nixBusHttpClient, 'markEventsAsFinished', async () => wait(100))
 
     await Promise.all([
-      httpNixEvents.markAsFinished({
+      nixEventsHttp.markAsFinished({
         event,
         subscriber,
       }),
-      httpNixEvents.markAsFinished({
+      nixEventsHttp.markAsFinished({
         event: anotherEvent,
         subscriber,
       }),
-      httpNixEvents.markAsFinished({
+      nixEventsHttp.markAsFinished({
         event: anyOtherEvent,
         subscriber,
       }),
-      httpNixEvents.markAsFinished({
+      nixEventsHttp.markAsFinished({
         event: oneMoreEvent,
         subscriber,
       }),
@@ -163,19 +163,19 @@ test.describe('InMemoryNixEvents', () => {
     mock.method(nixBusHttpClient, 'markEventsAsFailed', async () => wait(100))
 
     await Promise.all([
-      httpNixEvents.markAsFailed({
+      nixEventsHttp.markAsFailed({
         event,
         subscriber,
       }),
-      httpNixEvents.markAsFailed({
+      nixEventsHttp.markAsFailed({
         event: anotherEvent,
         subscriber,
       }),
-      httpNixEvents.markAsFailed({
+      nixEventsHttp.markAsFailed({
         event: anyOtherEvent,
         subscriber,
       }),
-      httpNixEvents.markAsFailed({
+      nixEventsHttp.markAsFailed({
         event: oneMoreEvent,
         subscriber,
       }),

@@ -2,15 +2,15 @@ import { expect, test } from 'playwright/test'
 
 import { NixEventsInMemory } from 'src/infrastructure/NixEventsInMemory'
 
-test.describe('InMemoryNixEvents', () => {
-  let inMemoryNixEvents: NixEventsInMemory
+test.describe('NixEventsInMemory', () => {
+  let nixEventsInMemory: NixEventsInMemory
 
   test.beforeEach(() => {
-    inMemoryNixEvents = new NixEventsInMemory()
+    nixEventsInMemory = new NixEventsInMemory()
   })
 
   test('do not put the event if no subscribers', async () => {
-    await inMemoryNixEvents.put({
+    await nixEventsInMemory.put({
       event: {
         id: 'another_event_id',
         type: 'another_event_type',
@@ -18,7 +18,7 @@ test.describe('InMemoryNixEvents', () => {
       },
     })
 
-    const events = await inMemoryNixEvents.getAllEventsTypesAndPayloads()
+    const events = await nixEventsInMemory.getAllEventsTypesAndPayloads()
 
     expect(events).verify()
   })
@@ -37,16 +37,16 @@ test.describe('InMemoryNixEvents', () => {
       config: { maxRetries: 3, timeout: retryTimeoutInSeconds, concurrency: 1 },
     }
 
-    await inMemoryNixEvents.subscribe('another_event_type', subscriber)
-    await inMemoryNixEvents.put({ event })
-    await inMemoryNixEvents.findNextEventsFor(subscriber)
+    await nixEventsInMemory.subscribe('another_event_type', subscriber)
+    await nixEventsInMemory.put({ event })
+    await nixEventsInMemory.findNextEventsFor(subscriber)
 
-    await inMemoryNixEvents.markAsFinished({
+    await nixEventsInMemory.markAsFinished({
       event,
       subscriber,
     })
 
-    const events = await inMemoryNixEvents.getAllEventsTypesAndPayloads()
+    const events = await nixEventsInMemory.getAllEventsTypesAndPayloads()
 
     expect(events).verify()
   })
@@ -65,21 +65,21 @@ test.describe('InMemoryNixEvents', () => {
       config: { maxRetries: 3, timeout: retryTimeoutInSeconds, concurrency: 1 },
     }
 
-    await inMemoryNixEvents.subscribe('another_event_type', subscriber)
-    await inMemoryNixEvents.put({ event })
-    await inMemoryNixEvents.findNextEventsFor(subscriber)
+    await nixEventsInMemory.subscribe('another_event_type', subscriber)
+    await nixEventsInMemory.put({ event })
+    await nixEventsInMemory.findNextEventsFor(subscriber)
 
-    await inMemoryNixEvents.markAsFailed({
+    await nixEventsInMemory.markAsFailed({
       event,
       subscriber,
     })
-    await inMemoryNixEvents.markAsFailed({
+    await nixEventsInMemory.markAsFailed({
       event,
       subscriber,
     })
 
     await wait(retryTimeoutInSeconds * 1000)
-    const events = await inMemoryNixEvents.getAllEventsTypesAndPayloads()
+    const events = await nixEventsInMemory.getAllEventsTypesAndPayloads()
 
     expect(events).verify()
   })
@@ -98,47 +98,47 @@ test.describe('InMemoryNixEvents', () => {
       config: { maxRetries: 3, timeout: retryTimeoutInSeconds, concurrency: 1 },
     }
 
-    await inMemoryNixEvents.subscribe('another_event_type', subscriber)
-    await inMemoryNixEvents.put({ event })
-    await inMemoryNixEvents.findNextEventsFor(subscriber)
+    await nixEventsInMemory.subscribe('another_event_type', subscriber)
+    await nixEventsInMemory.put({ event })
+    await nixEventsInMemory.findNextEventsFor(subscriber)
 
-    await inMemoryNixEvents.markAsFailed({
+    await nixEventsInMemory.markAsFailed({
       event,
       subscriber,
     })
-    await inMemoryNixEvents.markAsFailed({
+    await nixEventsInMemory.markAsFailed({
       event,
       subscriber,
     })
-    await inMemoryNixEvents.markAsFailed({
+    await nixEventsInMemory.markAsFailed({
       event,
       subscriber,
     })
 
     await wait(retryTimeoutInSeconds * 1000)
-    const events = await inMemoryNixEvents.getAllEventsTypesAndPayloads()
+    const events = await nixEventsInMemory.getAllEventsTypesAndPayloads()
 
     expect(events).verify()
   })
 
   test('get all events types and payloads', async () => {
-    await inMemoryNixEvents.subscribe('an_event_type', {
+    await nixEventsInMemory.subscribe('an_event_type', {
       id: 'a_subscriber_id',
       config: { maxRetries: 3, timeout: 10, concurrency: 1 },
     })
-    await inMemoryNixEvents.subscribe('another_event_type', {
+    await nixEventsInMemory.subscribe('another_event_type', {
       id: 'another_subscriber_id',
       config: { maxRetries: 3, timeout: 10, concurrency: 1 },
     })
 
-    await inMemoryNixEvents.put({
+    await nixEventsInMemory.put({
       event: {
         id: 'an_event_id',
         type: 'an_event_type',
         payload: { key: 'value' },
       },
     })
-    await inMemoryNixEvents.put({
+    await nixEventsInMemory.put({
       event: {
         id: 'another_event_id',
         type: 'another_event_type',
@@ -146,33 +146,33 @@ test.describe('InMemoryNixEvents', () => {
       },
     })
 
-    const events = await inMemoryNixEvents.getAllEventsTypesAndPayloads()
+    const events = await nixEventsInMemory.getAllEventsTypesAndPayloads()
 
     expect(events).verify()
   })
 
   test('get all events types and payloads with no duplicates', async () => {
-    await inMemoryNixEvents.subscribe('an_event_type', {
+    await nixEventsInMemory.subscribe('an_event_type', {
       id: 'a_subscriber_id',
       config: { maxRetries: 3, timeout: 10, concurrency: 1 },
     })
-    await inMemoryNixEvents.subscribe('an_event_type', {
+    await nixEventsInMemory.subscribe('an_event_type', {
       id: 'another_subscriber_id',
       config: { maxRetries: 3, timeout: 10, concurrency: 1 },
     })
-    await inMemoryNixEvents.subscribe('another_event_type', {
+    await nixEventsInMemory.subscribe('another_event_type', {
       id: 'any_other_subscriber_id',
       config: { maxRetries: 3, timeout: 10, concurrency: 1 },
     })
 
-    await inMemoryNixEvents.put({
+    await nixEventsInMemory.put({
       event: {
         id: 'an_event_id',
         type: 'an_event_type',
         payload: { key: 'value' },
       },
     })
-    await inMemoryNixEvents.put({
+    await nixEventsInMemory.put({
       event: {
         id: 'another_event_id',
         type: 'another_event_type',
@@ -180,7 +180,7 @@ test.describe('InMemoryNixEvents', () => {
       },
     })
 
-    const events = await inMemoryNixEvents.getAllEventsTypesAndPayloads()
+    const events = await nixEventsInMemory.getAllEventsTypesAndPayloads()
 
     expect(events).verify()
   })
