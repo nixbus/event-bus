@@ -30,28 +30,28 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@nixbus/crypto": "0.0.18"
+    "@nixbus/crypto": "0.0.20"
   },
   "devDependencies": {
-    "@eslint/js": "9.10.0",
-    "@playwright/test": "1.47.1",
+    "@eslint/js": "9.14.0",
+    "@playwright/test": "1.48.2",
     "@types/eslint": "9.6.1",
-    "@types/node": "22.5.4",
-    "@typescript-eslint/eslint-plugin": "8.5.0",
-    "@typescript-eslint/parser": "8.5.0",
+    "@types/node": "22.8.7",
+    "@typescript-eslint/eslint-plugin": "8.12.2",
+    "@typescript-eslint/parser": "8.12.2",
     "dts-bundle-generator": "9.5.1",
-    "esbuild": "0.23.1",
-    "eslint": "9.10.0",
+    "esbuild": "0.24.0",
+    "eslint": "9.14.0",
     "eslint-plugin-no-relative-import-paths": "1.5.5",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "eslint-plugin-unused-imports": "4.1.4",
-    "globals": "15.9.0",
+    "globals": "15.11.0",
     "npm-package-json-lint": "8.0.0",
     "npm-run-all": "4.1.5",
     "prettier": "3.3.3",
-    "tsx": "4.19.1",
-    "typescript": "5.6.2",
-    "typescript-eslint": "8.5.0"
+    "tsx": "4.19.2",
+    "typescript": "5.6.3",
+    "typescript-eslint": "8.12.2"
   },
   "eslintIgnore": [
     "/node_modules",
