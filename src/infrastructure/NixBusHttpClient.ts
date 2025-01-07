@@ -126,7 +126,7 @@ export class NixBusHttpClient {
         this.findNextEventsTimeout[subscriberId] += 1000
       }
     } else {
-      delete this.findNextEventsTimeout[subscriberId]
+      this.findNextEventsTimeout[subscriberId] = 0
     }
 
     const e = await Promise.all(data.events.map((i) => this.deserialize(subscriberId, i)))
