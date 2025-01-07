@@ -83,7 +83,7 @@ export type NixBusHttpClientOptions = {
 }
 export class NixBusHttpClient {
   private readonly baseUrl: string
-  private readonly findNextEventsTimeout: Record<NixSubscriberId, number>
+  private findNextEventsTimeout: Record<NixSubscriberId, number>
 
   constructor(
     private deps: Deps,
@@ -130,7 +130,7 @@ export class NixBusHttpClient {
         this.findNextEventsTimeout[subscriberId] += 1000
       }
     } else {
-      this.findNextEventsTimeout[subscriberId] = 0
+      this.findNextEventsTimeout = {}
     }
 
     const e = await Promise.all(data.events.map((i) => this.deserialize(subscriberId, i)))
