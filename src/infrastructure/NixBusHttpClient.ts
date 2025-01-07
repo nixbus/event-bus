@@ -104,10 +104,6 @@ export class NixBusHttpClient {
   }: {
     subscriberId: string
   }): Promise<FindEventsResponse> {
-    this.deps.logger.debug('NixBusHttpClient', 'findNextEvents', {
-      subscriberId,
-      timeouts: this.findNextEventsTimeout,
-    })
     if (this.findNextEventsTimeout[subscriberId]) {
       await wait(this.findNextEventsTimeout[subscriberId])
     }
