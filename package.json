@@ -30,7 +30,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@nixbus/crypto": "0.0.20"
+    "@nixbus/crypto": "0.0.21"
   },
   "devDependencies": {
     "@eslint/js": "9.17.0",
