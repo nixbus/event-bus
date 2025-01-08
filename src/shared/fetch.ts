@@ -46,7 +46,7 @@ async function handleFetchError(url: string, options: FetchOptions, error: any):
   const MAX_RETRIES = 3
   const retryCount = options.retryCount ?? 0
 
-  if (error.message.includes('socket hang up') && retryCount < MAX_RETRIES) {
+  if (error && retryCount < MAX_RETRIES) {
     console.warn(`[fetch] Retrying fetch in 1s (${retryCount + 1}/${MAX_RETRIES})`, url)
     await wait(1000)
     return fetchJson(url, { ...options, retryCount: retryCount + 1 })
