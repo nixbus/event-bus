@@ -31,6 +31,11 @@ export class NixEventsHttp implements NixEvents {
     return events.map((e) => this.serializeEvent(e))
   }
 
+  public async findDeadEventsFor(subscriber: NixSubscriber): Promise<NixEvent[]> {
+    const { events } = await this.deps.client.findDeadEvents({ subscriberId: subscriber.id })
+    return events.map((e) => this.serializeEvent(e))
+  }
+
   public async getSubscribers(): Promise<NixSubscriber[]> {
     return Object.values(this.subscribers)
   }

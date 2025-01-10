@@ -2,6 +2,7 @@
   "events": {
     "subscribers": {},
     "events": {},
+    "deadEvents": {},
     "retries": {}
   },
   "actions": {

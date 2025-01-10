@@ -117,8 +117,9 @@ test.describe('NixEventsInMemory', () => {
 
     await wait(retryTimeoutInSeconds * 1000)
     const events = await nixEventsInMemory.getAllEventsTypesAndPayloads()
+    const deadEvents = await nixEventsInMemory.getAllDeadEventsTypesAndPayloads()
 
-    expect(events).verify()
+    expect({ events, deadEvents }).verify()
   })
 
   test('get all events types and payloads', async () => {

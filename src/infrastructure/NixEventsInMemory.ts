@@ -6,11 +6,13 @@ import { EventIdIsRequired } from 'src/domain/errors'
 export class NixEventsInMemory implements NixEvents {
   private subscribers: Record<NixEventType, NixSubscriber[]>
   private events: Record<NixSubscriberId, NixEvent[]>
+  private deadEvents: Record<NixSubscriberId, NixEvent[]>
   private retries: Record<NixSubscriberId, Record<NixEventId, number>>
 
   constructor() {
     this.subscribers = {}
     this.events = {}
+    this.deadEvents = {}
     this.retries = {}
   }
 
@@ -24,10 +26,35 @@ export class NixEventsInMemory implements NixEvents {
     })
   }
 
+  public async findDeadEventsFor(subscriber: NixSubscriber): Promise<NixEvent[]> {
+    const concurrency = subscriber.config.concurrency
+    const allEvents = this.ensureDeadEventList(subscriber.id)
+
+    return allEvents.splice(0, concurrency)
+  }
+
   public async getAllEventsTypesAndPayloads(): Promise<
     Array<{ type: string; payload: Record<string, any> }>
   > {
     const events = Object.values(this.events).flat()
+
+    const uniqueEvents = new Map<string, NixEvent>()
+    events.forEach((event) => {
+      uniqueEvents.set(event.id, event)
+    })
+
+    return Array.from(uniqueEvents.values()).map((event) => {
+      return {
+        type: event.type,
+        payload: event.payload,
+      }
+    })
+  }
+
+  public async getAllDeadEventsTypesAndPayloads(): Promise<
+    Array<{ type: string; payload: Record<string, any> }>
+  > {
+    const events = Object.values(this.deadEvents).flat()
 
     const uniqueEvents = new Map<string, NixEvent>()
     events.forEach((event) => {
@@ -86,6 +113,7 @@ export class NixEventsInMemory implements NixEvents {
     if (retries >= subscriber.config.maxRetries) {
       delete this.events[subscriber.id]
       delete this.retries[subscriber.id]
+      this.ensureDeadEventList(subscriber.id).push(event)
       return
     }
 
@@ -127,6 +155,10 @@ export class NixEventsInMemory implements NixEvents {
 
   private ensureEventList(subscriberId: string): NixEvent[] {
     return (this.events[subscriberId] = this.events[subscriberId] || [])
+  }
+
+  private ensureDeadEventList(subscriberId: string): NixEvent[] {
+    return (this.deadEvents[subscriberId] = this.deadEvents[subscriberId] || [])
   }
 
   private ensureRetryRecord(subscriberId: string, eventId: string): number {

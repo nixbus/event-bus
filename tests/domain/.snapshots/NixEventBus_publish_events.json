@@ -45,6 +45,7 @@
       }
     ]
   },
+  "deadEvents": {},
   "retries": {
     "a_subscriber_id": {
       "an_event_id": 0

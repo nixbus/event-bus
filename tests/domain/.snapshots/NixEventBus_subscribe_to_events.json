@@ -22,5 +22,6 @@
     ]
   },
   "events": {},
+  "deadEvents": {},
   "retries": {}
 }

@@ -1,5 +1,6 @@
 {
   "subscribers": {},
   "events": {},
+  "deadEvents": {},
   "retries": {}
 }

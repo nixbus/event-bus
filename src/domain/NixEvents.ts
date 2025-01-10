@@ -4,6 +4,8 @@ import type { NixSubscriber } from 'src/domain/NixSubscriber'
 export interface NixEvents {
   findNextEventsFor(subscriber: NixSubscriber): Promise<NixEvent[]>
 
+  findDeadEventsFor(subscriber: NixSubscriber): Promise<NixEvent[]>
+
   getSubscribers(): Promise<NixSubscriber[]>
 
   getSubscribersByEventType(evenType: string): Promise<NixSubscriber[]>

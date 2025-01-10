@@ -1,0 +1,140 @@
+{
+  "events": {
+    "subscribers": {
+      "an_event_type": [
+        {
+          "id": "a_subscriber_id",
+          "config": {
+            "maxRetries": 3,
+            "timeout": 1,
+            "concurrency": 5
+          }
+        },
+        {
+          "id": "another_subscriber_id",
+          "config": {
+            "maxRetries": 3,
+            "timeout": 1,
+            "concurrency": 5
+          }
+        }
+      ],
+      "another_event_type": [
+        {
+          "id": "any_other_subscriber_id",
+          "config": {
+            "maxRetries": 3,
+            "timeout": 1,
+            "concurrency": 5
+          }
+        }
+      ]
+    },
+    "events": {
+      "any_other_subscriber_id": [],
+      "a_subscriber_id": [],
+      "another_subscriber_id": []
+    },
+    "deadEvents": {
+      "another_subscriber_id": [],
+      "a_subscriber_id": [
+        {
+          "id": "an_event_id",
+          "type": "an_event_type",
+          "payload": {
+            "hello": "world"
+          },
+          "created_at": "2024-05-05T14:24:05.184Z",
+          "updated_at": "2024-05-05T14:24:05.184Z"
+        }
+      ]
+    },
+    "retries": {
+      "any_other_subscriber_id": {}
+    }
+  },
+  "actions": {
+    "a_subscriber_id": [
+      {
+        "id": "an_event_id",
+        "type": "an_event_type",
+        "payload": {
+          "hello": "world"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      },
+      {
+        "id": "an_event_id",
+        "type": "an_event_type",
+        "payload": {
+          "hello": "world"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      },
+      {
+        "id": "an_event_id",
+        "type": "an_event_type",
+        "payload": {
+          "hello": "world"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      }
+    ],
+    "any_other_subscriber_id": [
+      {
+        "id": "another_event_id",
+        "type": "another_event_type",
+        "payload": {
+          "hello": "world 2"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      }
+    ],
+    "another_subscriber_id": [
+      {
+        "id": "an_event_id",
+        "type": "an_event_type",
+        "payload": {
+          "hello": "world"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      },
+      {
+        "id": "an_event_id",
+        "type": "an_event_type",
+        "payload": {
+          "hello": "world"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      },
+      {
+        "id": "an_event_id",
+        "type": "an_event_type",
+        "payload": {
+          "hello": "world"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      }
+    ]
+  },
+  "deadActions": {
+    "another_subscriber_id": [
+      {
+        "id": "an_event_id",
+        "type": "an_event_type",
+        "payload": {
+          "hello": "world"
+        },
+        "created_at": "2024-05-05T14:24:05.184Z",
+        "updated_at": "2024-05-05T14:24:05.184Z"
+      }
+    ]
+  }
+}

@@ -26,6 +26,7 @@
       "another_subscriber_id": [],
       "any_other_subscriber_id": []
     },
+    "deadEvents": {},
     "retries": {
       "another_subscriber_id": {},
       "any_other_subscriber_id": {}

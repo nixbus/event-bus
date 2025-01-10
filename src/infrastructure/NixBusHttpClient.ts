@@ -28,6 +28,14 @@ export type FindEventResponse = {
   updated_at: Date
 }
 
+export type FindDeadEventResponse = {
+  id: string
+  type: string
+  payload: Record<string, any>
+  created_at: Date
+  updated_at: Date
+}
+
 export type SubscribersResponse = {
   subscribers: SubscriberResponse[]
 }
@@ -43,6 +51,10 @@ export type SubscriberResponse = {
 }
 
 export type FindNextEventsRequest = {
+  subscriber_id: string
+}
+
+export type FindDeadEventsRequest = {
   subscriber_id: string
 }
 
@@ -131,6 +143,29 @@ export class NixBusHttpClient {
 
     const e = await Promise.all(data.events.map((i) => this.deserialize(subscriberId, i)))
     const events = e.filter((i) => i !== null) as FindEventResponse[]
+    return {
+      events,
+    }
+  }
+
+  public async findDeadEvents({
+    subscriberId,
+  }: {
+    subscriberId: string
+  }): Promise<FindEventsResponse> {
+    const body: FindDeadEventsRequest = {
+      subscriber_id: subscriberId,
+    }
+    const response = await fetchJson(`${this.baseUrl}/find_dead_events`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: authorizationBearer(this.opts.token),
+    })
+    const json = await response.json()
+    const data = json as EventsResponse
+
+    const e = await Promise.all(data.events.map((i) => this.deserialize(subscriberId, i)))
+    const events = e.filter((i) => i !== null) as FindDeadEventResponse[]
     return {
       events,
     }
