@@ -137,7 +137,7 @@ export class NixEventBus {
       this.deps.logger.error('EventBus', 'runSubscriberAction', {
         event_id: event.id,
         subscriber_id: subscriber.id,
-        error,
+        error: JSON.stringify(error.message),
       })
     }
   }
