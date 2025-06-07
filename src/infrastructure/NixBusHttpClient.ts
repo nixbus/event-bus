@@ -95,7 +95,7 @@ export type NixBusHttpClientOptions = {
 }
 export class NixBusHttpClient {
   private readonly baseUrl: string
-  private findNextEventsTimeout: Record<NixSubscriberId, number>
+  private findNextEventsTimeout: Record<NixSubscriberId, { value: number; lastIncreasedAt: number }>
 
   constructor(
     private deps: Deps,
@@ -116,8 +116,9 @@ export class NixBusHttpClient {
   }: {
     subscriberId: string
   }): Promise<FindEventsResponse> {
-    if (this.findNextEventsTimeout[subscriberId]) {
-      await wait(this.findNextEventsTimeout[subscriberId])
+    const timeoutObj = this.findNextEventsTimeout[subscriberId]
+    if (timeoutObj && timeoutObj.value > 0) {
+      await wait(timeoutObj.value)
     }
 
     const body: FindNextEventsRequest = {
@@ -132,10 +133,15 @@ export class NixBusHttpClient {
     const data = json as EventsResponse
 
     if (data.events.length === 0) {
-      this.findNextEventsTimeout[subscriberId] = this.findNextEventsTimeout[subscriberId] || 0
-
-      if (this.findNextEventsTimeout[subscriberId] < 30000) {
-        this.findNextEventsTimeout[subscriberId] += 1000
+      const now = Date.now()
+      if (!this.findNextEventsTimeout[subscriberId]) {
+        this.findNextEventsTimeout[subscriberId] = { value: 0, lastIncreasedAt: now }
+      } else {
+        const timeoutData = this.findNextEventsTimeout[subscriberId]
+        if (timeoutData.value < 30000 && now - timeoutData.lastIncreasedAt >= 30000) {
+          timeoutData.value += 1000
+          timeoutData.lastIncreasedAt = now
+        }
       }
     } else {
       this.findNextEventsTimeout = {}
