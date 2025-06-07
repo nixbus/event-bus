@@ -215,6 +215,8 @@ export class NixBusHttpClient {
   }: {
     events: Array<{ type: string; payload: Record<string, any> }>
   }): Promise<void> {
+    this.findNextEventsTimeout = {}
+
     const serializedEvents = await Promise.all(
       events.map(async (e) => {
         const payload = this.deps.crypto
